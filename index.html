@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CitizenCyberHub - Cybercrime Support</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+        }
+
+        .chat-container {
+            height: 400px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .message-bubble {
+            animation: fadeIn .3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+<!-- ✅ NAVIGATION -->
+<nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+        <div class="flex items-center">
+            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+            <span class="ml-2 text-xl font-bold text-purple-600">CitizenCyberHub</span>
+        </div>
+
+        <div class="hidden md:flex space-x-6">
+            <a href="#home" class="hover:text-purple-600">Home</a>
+            <a href="#chat" class="hover:text-purple-600">Get Help</a>
+            <a href="#emergency" class="hover:text-purple-600">Emergency</a>
+            <a href="#donate" class="hover:text-purple-600">Donate</a>
+            <a href="#jointeam" class="hover:text-purple-600">Join Team</a>
+
+            <button onclick="showAdminLogin()" 
+                    class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                Admin Portal
+            </button>
+        </div>
+
+        <button onclick="toggleMobileMenu()" class="md:hidden">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- ✅ MOBILE MENU -->
+    <div id="mobileMenu" class="hidden bg-white px-4 pb-4">
+        <a href="#home" class="block py-2 hover:text-purple-600">Home</a>
+        <a href="#chat" class="block py-2 hover:text-purple-600">Get Help</a>
+        <a href="#emergency" class="block py-2 hover:text-purple-600">Emergency</a>
+        <a href="#donate" class="block py-2 hover:text-purple-600">Donate</a>
+        <a href="#jointeam" class="block py-2 hover:text-purple-600">Join Team</a>
+
+        <button onclick="showAdminLogin()" 
+                class="w-full mt-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+            Admin Portal
+        </button>
+    </div>
+</nav>
+
+<!-- ✅ HERO -->
+<section id="home" class="text-center py-20">
+    <h1 class="text-5xl font-bold text-white mb-6">We're Here to Help You</h1>
+    <p class="text-white opacity-90 mb-8 max-w-2xl mx-auto">
+        A private citizen initiative offering support, guidance, and safety to cybercrime victims. A safe space to report, get help, and heal.
+    </p>
+
+    <div class="flex justify-center gap-4">
+        <a href="#chat" 
+           class="bg-white text-purple-600 px-8 py-4 rounded-lg font-semibold shadow hover:bg-gray-100">
+           Start Chat Now
+        </a>
+        <a href="#emergency" 
+           class="bg-red-500 text-white px-8 py-4 rounded-lg font-semibold shadow hover:bg-red-600">
+           Emergency Help
+        </a>
+    </div>
+</section>
+
+<!-- ✅ CHAT SECTION -->
+<section id="chat" class="py-20">
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+
+            <div class="bg-gradient-to-r from-purple-600 to-indigo-600 p-6">
+                <h2 class="text-2xl font-bold text-white">Chat with Us</h2>
+                <p class="text-white opacity-90">Select your issue category.</p>
+            </div>
+
+            <div id="userChatView" class="p-6">
+                <!-- ✅ CATEGORY SELECTION -->
+                <div id="categorySelection">
+                    <h3 class="font-semibold text-gray-800 mb-3">How can we help you?</h3>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+                        <button onclick="selectCategory('Cyber Bullying')" class="card">
+                            🛡️ <strong>Cyber Bullying</strong>
+                            <p class="text-sm text-gray-600">Online harassment & abuse</p>
+                        </button>
+
+                        <button onclick="selectCategory('Blackmail')" class="card">
+                            ⚠️ <strong>Blackmail</strong>
+                            <p class="text-sm text-gray-600">Threats & extortion</p>
+                        </button>
+
+                        <button onclick="selectCategory('Harassment')" class="card">
+                            🚫 <strong>Harassment</strong>
+                            <p class="text-sm text-gray-600">Unwanted messages</p>
+                        </button>
+
+                        <button onclick="selectCategory('Guidance')" class="card">
+                            📘 <strong>Guidance</strong>
+                            <p class="text-sm text-gray-600">General online safety</p>
+                        </button>
+
+                        <button onclick="selectCategory('Account Issues (Instagram Unban)')" class="card">
+                            📱 <strong>Account Issues</strong>
+                            <p class="text-sm text-gray-600">Instagram ID unban help</p>
+                        </button>
+
+                        <button onclick="selectCategory('Post Removal')" class="card">
+                            🗑️ <strong>Post Removal</strong>
+                            <p class="text-sm text-gray-600">
+                                Depends on platform — not guaranteed, but we will try our best.
+                            </p>
+                        </button>
+                    </div>
+
+                    <div class="mt-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+                        <p class="text-sm text-yellow-800">
+                            <strong>Note:</strong> We do NOT assist with money fraud.  
+                            Contact your bank + cyber police immediately.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ✅ CHAT MESSAGES -->
+                <div id="chatMessages"
+                     class="chat-container bg-gray-100 rounded-lg p-4 my-4"></div>
+
+                <!-- ✅ CHAT INPUT -->
+                <div id="chatInputArea" class="hidden">
+                    <div class="flex gap-2">
+                        <input type="text" id="userMessageInput"
+                               class="flex-1 px-4 py-3 border rounded-lg"
+                               placeholder="Type your message..."
+                               onkeypress="if(event.key==='Enter') sendUserMessage()">
+
+                        <button onclick="sendUserMessage()" 
+                                class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ✅ ADMIN LOGIN -->
+            <div id="adminLoginView" class="hidden p-6">
+                <h3 class="text-xl font-semibold mb-4">Admin Login</h3>
+
+                <input type="password" id="adminPassword"
+                       class="w-full p-3 border rounded-lg mb-3"
+                       placeholder="Enter admin password"
+                       onkeypress="if(event.key==='Enter') adminLogin()">
+
+                <button onclick="adminLogin()" 
+                        class="w-full bg-purple-600 text-white p-3 rounded-lg hover:bg-purple-700">
+                    Login
+                </button>
+
+                <button onclick="showUserChat()" 
+                        class="w-full mt-3 bg-gray-300 text-gray-700 p-3 rounded-lg hover:bg-gray-400">
+                    Back
+                </button>
+
+                <p id="loginError" class="text-red-500 mt-2 hidden">Incorrect Password</p>
+            </div>
+
+            <!-- ✅ ADMIN CHAT VIEW -->
+            <div id="adminChatView" class="hidden p-6">
+                <div class="flex justify-between mb-3">
+                    <h3 class="text-xl font-semibold">Admin Panel</h3>
+                    <button onclick="adminLogout()" 
+                            class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+                        Logout
+                    </button>
+                </div>
+
+                <h4 class="font-semibold mb-2 text-gray-700">Active Chats</h4>
+                <div id="adminChatList" class="max-h-40 overflow-y-auto space-y-2"></div>
+
+                <div id="adminChatMessages"
+                     class="chat-container bg-gray-100 rounded-lg p-4 my-4">
+                    <p class="text-center text-gray-500">Select a chat to view messages</p>
+                </div>
+
+                <div id="adminInputArea" class="hidden">
+                    <div class="flex gap-2">
+                        <input type="text" id="adminMessageInput"
+                               class="flex-1 p-3 border rounded-lg"
+                               placeholder="Type a response..."
+                               onkeypress="if(event.key==='Enter') sendAdminMessage()">
+
+                        <button onclick="sendAdminMessage()"
+                                class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ✅ EMERGENCY -->
+<section id="emergency" class="py-20">
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl text-center">
+
+            <h2 class="text-3xl font-bold mb-6">🚨 Emergency Helplines</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div class="p-6 bg-red-50 border red-200 rounded-lg">
+                    <h3 class="text-xl font-bold text-red-600 mb-2">Cybercrime Helpline</h3>
+                    <p class="text-3xl font-bold">1930</p>
+                </div>
+
+                <div class="p-6 bg-blue-50 border blue-200 rounded-lg">
+                    <h3 class="text-xl font-bold text-blue-600 mb-2">Women Helpline</h3>
+                    <p class="text-3xl font-bold">1091</p>
+                </div>
+
+                <div class="p-6 bg-green-50 border green-200 rounded-lg">
+                    <h3 class="text-xl font-bold text-green-600 mb-2">Child Helpline</h3>
+                    <p class="text-3xl font-bold">1098</p>
+                </div>
+
+                <div class="p-6 bg-purple-50 border purple-200 rounded-lg">
+                    <h3 class="text-xl font-bold text-purple-600 mb-2">Police Emergency</h3>
+                    <p class="text-3xl font-bold">100</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ✅ DONATE -->
+<section id="donate" class="py-20">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl">
+
+            <h2 class="text-3xl font-bold mb-4">💝 Support Our Mission</h2>
+            <p class="mb-5 text-gray-600">
+                Donation link coming soon — thank you for supporting our cause.
+            </p>
+
+            <div class="bg-purple-50 p-6 rounded-lg">
+                <div class="flex justify-center space-x-2">
+                    <div class="w-3 h-3 bg-purple-600 rounded-full animate-pulse"></div>
+                    <div class="w-3 h-3 bg-purple-600 rounded-full animate-pulse" style="animation-delay:.2s"></div>
+                    <div class="w-3 h-3 bg-purple-600 rounded-full animate-pulse" style="animation-delay:.4s"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ✅ JOIN TEAM -->
+<section id="jointeam" class="py-20">
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl text-center">
+
+            <h2 class="text-3xl font-bold mb-4">🤝 Join Our Team</h2>
+
+            <p class="mb-6 text-gray-600">
+                Volunteer and help cybercrime victims.
+            </p>
+
+            <div class="bg-indigo-50 p-6 rounded-lg mb-6">
+                <h3 class="font-bold text-indigo-600 mb-3">We're Looking For:</h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+
+                    <p>👨‍💻 Cyber Security Experts</p>
+                    <p>⚖️ Legal Advisors</p>
+                    <p>🧠 Counselors</p>
+                    <p>📞 Support Staff</p>
+                    <p>👮 Police</p>
+                    <p>💁 Other</p>
+
+                </div>
+            </div>
+
+            <p class="text-gray-700">Volunteer link coming soon.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ✅ FOOTER -->
+<footer class="bg-gray-900 text-white py-10 text-center">
+    <p class="text-gray-400">Citizen Cyber Hub, A Citizen Initiative To Support Cyber Crime Victims</p>
+</footer>
+
+<!-- ✅ JAVASCRIPT (CHAT + ADMIN SYSTEM) -->
+<script>
+if (!localStorage.getItem("chats")) {
+    localStorage.setItem("chats", JSON.stringify({}));
+}
+let currentChatId = null;
+let currentAdminChatId = null;
+let isAdmin = false;
+
+function initializeChat() {
+    currentChatId = "user_" + Date.now();
+    const chats = JSON.parse(localStorage.getItem("chats"));
+    chats[currentChatId] = {
+        messages: [],
+        category: null,
+        timestamp: new Date().toISOString()
+    };
+    localStorage.setItem("chats", JSON.stringify(chats));
+    addSystemMessage("Welcome! Please select a category to begin.");
+}
+
+function selectCategory(cat) {
+    const chats = JSON.parse(localStorage.getItem("chats"));
+    chats[currentChatId].category = cat;
+    localStorage.setItem("chats", JSON.stringify(chats));
+    document.getElementById("categorySelection").classList.add("hidden");
+    document.getElementById("chatInputArea").classList.remove("hidden");
+    addUserMessage("I need help with: " + cat);
+    addSystemMessage("Please describe your issue in detail.");
+}
+
+function addSystemMessage(t) {
+    appendMessage("system", t);
+}
+
+function addUserMessage(t) {
+    appendMessage("user", t);
+}
+
+function addAdminMessage(t, id) {
+    appendMessage("admin", t, id);
+}
+
+function appendMessage(sender, text, chatId = currentChatId) {
+    const box = isAdmin && sender !== "user" 
+        ? document.getElementById("adminChatMessages")
+        : document.getElementById("chatMessages");
+
+    const div = document.createElement("div");
+    div.className = "mb-3 message-bubble";
+
+    let bubble = "";
+    if (sender === "user") {
+        bubble = `
+        <div class="flex justify-end">
+            <div class="bg-purple-600 text-white px-4 py-2 rounded-lg max-w-sm">${text}</div>
+        </div>`;
+    } else if (sender === "system") {
+        bubble = `
+        <div class="flex">
+            <div class="bg-white border px-4 py-2 rounded-lg max-w-sm">${text}</div>
+        </div>`;
+    } else {
+        bubble = `
+        <div class="flex">
+            <div class="bg-green-200 border px-4 py-2 rounded-lg max-w-sm">
+                <strong>Admin:</strong> ${text}
+            </div>
+        </div>`;
+    }
+
+    div.innerHTML = bubble;
+    box.appendChild(div);
+
+    const chats = JSON.parse(localStorage.getItem("chats"));
+    chats[chatId].messages.push({ sender, text });
+    localStorage.setItem("chats", JSON.stringify(chats));
+
+    setTimeout(() => {
+        const containers = document.querySelectorAll(".chat-container");
+        containers.forEach(c => c.scrollTop = c.scrollHeight);
+    }, 50);
+}
+
+function sendUserMessage() {
+    const input = document.getElementById("userMessageInput");
+    if (input.value.trim() === "") return;
+    addUserMessage(input.value.trim());
+    input.value = "";
+}
+
+function showAdminLogin() {
+    document.getElementById("userChatView").classList.add("hidden");
+    document.getElementById("adminLoginView").classList.remove("hidden");
+}
+function showUserChat() {
+    document.getElementById("userChatView").classList.remove("hidden");
+    document.getElementById("adminLoginView").classList.add("hidden");
+    document.getElementById("adminChatView").classList.add("hidden");
+    isAdmin = false;
+}
+
+function adminLogin() {
+    let pass = document.getElementById("adminPassword").value;
+    if (pass !== "citizencyberhub@adminsonly") {
+        document.getElementById("loginError").classList.remove("hidden");
+        return;
+    }
+    isAdmin = true;
+    document.getElementById("adminLoginView").classList.add("hidden");
+    document.getElementById("adminChatView").classList.remove("hidden");
+    loadAdminChats();
+}
+
+function adminLogout() {
+    isAdmin = false;
+    showUserChat();
+}
+
+function loadAdminChats() {
+    const list = document.getElementById("adminChatList");
+    list.innerHTML = "";
+    const chats = JSON.parse(localStorage.getItem("chats"));
+    Object.keys(chats).forEach(id => {
+        const item = document.createElement("div");
+        item.className = "p-3 bg-gray-100 rounded cursor-pointer hover:bg-gray-200";
+        item.innerHTML = `
+            <strong>${chats[id].category || "No Category"}</strong><br>
+            <span class="text-xs text-gray-600">${id}</span>`;
+        item.onclick = () => openAdminChat(id);
+        list.appendChild(item);
+    });
+}
+
+function openAdminChat(id) {
+    currentAdminChatId = id;
+    const box = document.getElementById("adminChatMessages");
+    box.innerHTML = "";
+    const chats = JSON.parse(localStorage.getItem("chats"))[id];
+    chats.messages.forEach(m => appendMessage(m.sender, m.text, id));
+    document.getElementById("adminInputArea").classList.remove("hidden");
+}
+
+function sendAdminMessage() {
+    const input = document.getElementById("adminMessageInput");
+    if (!currentAdminChatId || input.value.trim() === "") return;
+    addAdminMessage(input.value.trim(), currentAdminChatId);
+    input.value = "";
+}
+
+function toggleMobileMenu() {
+    document.getElementById("mobileMenu").classList.toggle("hidden");
+}
+
+window.onload = () => initializeChat();
+</script>
+
+</body>
+</html>
